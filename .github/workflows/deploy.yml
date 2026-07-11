@@ -1,0 +1,93 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches:
+      - '**'
+      - '!gh-pages' # Prevent infinite CI loop on deployments
+  workflow_dispatch:
+
+permissions:
+  contents: write # Needs write access to commit preview folders back to the repo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Fetch all branches and tags
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Prepare build files
+        run: |
+          mkdir -p ../temp_build
+
+          # Setup Git config for commit
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+      # --- BUILD PRODUCTION (When pushing to main) ---
+      - name: Build production site
+        if: github.ref_name == 'main'
+        run: |
+          pnpm --filter portfolio build
+          # Copy to temp dir
+          mkdir -p ../temp_build/portfolio
+          cp -r sites/portfolio/build/* ../temp_build/portfolio/
+          # Add simple root redirect index.html pointing to /portfolio/
+          echo '<meta http-equiv="refresh" content="0; url=./portfolio/">' > ../temp_build/index.html
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}/portfolio'
+
+      # --- BUILD PREVIEW (When pushing to feature branches) ---
+      - name: Build branch preview site
+        if: github.ref_name != 'main'
+        run: |
+          pnpm --filter portfolio build
+          # Copy to temp dir under preview/<branch-name>/portfolio
+          mkdir -p ../temp_build/preview/${{ github.ref_name }}/portfolio
+          cp -r sites/portfolio/build/* ../temp_build/preview/${{ github.ref_name }}/portfolio/
+        env:
+          BASE_PATH: '/${{ github.event.repository.name }}/preview/${{ github.ref_name }}/portfolio'
+
+      # --- COMMIT AND DEPLOY TO GH-PAGES ---
+      - name: Commit build to gh-pages branch
+        run: |
+          # Fetch origin gh-pages branch
+          git fetch origin gh-pages:gh-pages || true
+
+          # Switch to gh-pages or create orphan if it doesn't exist
+          if git checkout gh-pages; then
+            git reset --hard origin/gh-pages || true
+          else
+            git checkout --orphan gh-pages
+            git rm -rf .
+          fi
+
+          # Copy built folders over. This preserves existing subfolders (like other previews)
+          cp -r ../temp_build/* ./
+
+          # Add and commit changes
+          git add .
+          git commit -m "Deploy for branch ${{ github.ref_name }} [skip ci]" || echo "No changes to commit"
+          git push origin gh-pages
+
+          # Go back to checkout branch (cleanup)
+          git checkout ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

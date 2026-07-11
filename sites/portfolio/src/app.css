@@ -1,0 +1,248 @@
+:root {
+	/* Colors */
+	--bg: #060608;
+	--bg-alt: #0d0d12;
+	--surface: #16161c;
+	--border: #23232c;
+	--text: #f4f4f7;
+	--text-muted: #8d8d97;
+	--gold: #dfb15b;
+	--gold-glow: rgba(223, 177, 91, 0.25);
+
+	/* Fonts */
+	--font-display: 'Syne', 'Unbounded', sans-serif;
+	--font-body: 'Plus Jakarta Sans', sans-serif;
+	--font-mono: 'Share Tech Mono', 'JetBrains Mono', monospace;
+}
+
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+	background: var(--bg);
+	color: var(--text);
+	font-family: var(--font-body);
+	font-size-adjust: from-font;
+}
+
+html.playback-active {
+	scroll-behavior: auto !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto;
+	}
+	* {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+	}
+}
+
+body {
+	line-height: 1.6;
+	overflow-x: hidden;
+	min-height: 100vh;
+	background: var(--bg);
+	opacity: 0;
+	transition: opacity 0.4s ease;
+}
+
+html.fonts-loaded body {
+	opacity: 1;
+}
+
+::selection {
+	background: var(--gold);
+	color: #000;
+}
+
+a {
+	color: inherit;
+	text-decoration: none;
+}
+
+img {
+	max-width: 100%;
+	display: block;
+}
+
+.wrap {
+	max-width: 73.75rem;
+	margin: 0 auto;
+	padding: 0 2rem;
+}
+
+@media (max-width: 37.5em) {
+	.wrap {
+		padding: 0 1.25rem;
+	}
+}
+
+/* ---------- Typography & Utility Headers ---------- */
+h1,
+h2,
+h3 {
+	font-family: var(--font-display);
+	font-weight: 800;
+	text-transform: uppercase;
+	letter-spacing: -0.02em;
+}
+
+.section-header,
+.sub-section-header {
+	margin-top: 0;
+	margin-bottom: 1.5rem;
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.section-header h2 {
+	font-size: 2rem;
+	color: var(--text);
+}
+
+.sub-section-header h3 {
+	font-size: 1.25rem;
+	color: var(--text);
+	margin-top: 0.5rem;
+}
+
+.section-tag-row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-family: var(--font-mono);
+	font-size: 0.875rem;
+	letter-spacing: 0.08em;
+	padding: 0.875rem 1.75rem;
+	border-radius: 4px;
+	border: 1px solid var(--gold);
+	background: var(--gold);
+	color: #000;
+	font-weight: 700;
+	cursor: pointer;
+	text-transform: uppercase;
+	transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+	position: relative;
+	overflow: hidden;
+}
+
+.btn:hover {
+	background: transparent;
+	color: var(--gold);
+	box-shadow: 0 0 20px var(--gold-glow);
+	transform: translateY(-2px);
+}
+
+.btn::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: -100%;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+	transition: 0.5s;
+}
+
+.btn:hover::after {
+	left: 100%;
+}
+
+.btn:focus-visible {
+	outline: 2px solid var(--gold);
+	outline-offset: 3px;
+}
+
+.btn-ghost {
+	background: transparent;
+	color: var(--text);
+	border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+	border-color: var(--gold);
+	color: var(--gold);
+	background: rgba(223, 177, 91, 0.04);
+}
+
+.btn-sm {
+	padding: 0.625rem 1.25rem;
+	font-size: 0.75rem;
+}
+
+/* ---------- Telemetry Labels & Badges ---------- */
+.label-telemetry {
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.15em;
+	color: var(--gold);
+	text-transform: uppercase;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.label-telemetry::before {
+	content: '';
+	width: 0.375rem;
+	height: 0.375rem;
+	border-radius: 50%;
+	background: var(--gold);
+	box-shadow: 0 0 8px var(--gold);
+}
+
+/* ---------- Scroll Reveal Effects ---------- */
+.reveal {
+	opacity: 0;
+	transform: translateY(1.875rem);
+	transition:
+		opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+		transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.in {
+	opacity: 1;
+	transform: translateY(0);
+}
+
+/* ---------- Section Scroll Offsets for Navigation Bar ---------- */
+#work,
+#work-longform,
+#work-shortform,
+#collab-section,
+#testimony-section,
+#about {
+	scroll-margin-top: 5rem;
+}
+
+/* ---------- LOG Mode (Easter Egg) ---------- */
+/* Apply low saturation, low contrast, and flat grading to the page wrap, fixed nav bar, and timeline dock separately.
+   This avoids establishing containing blocks on fixed elements, preserving their viewport positioning. */
+body.log-mode .viewport-wrap,
+body.log-mode .nav-bar,
+body.log-mode .timeline-dock {
+	filter: saturate(0.18) contrast(0.75) brightness(1.12) !important;
+}
+
+.viewport-wrap,
+.nav-bar,
+.timeline-dock {
+	transition: filter 1s cubic-bezier(0.25, 0.8, 0.25, 1);
+}

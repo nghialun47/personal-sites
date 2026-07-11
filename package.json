@@ -1,0 +1,26 @@
+{
+	"name": "sites-monorepo",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev:portfolio": "pnpm --filter portfolio dev",
+		"build:portfolio": "pnpm --filter portfolio build",
+		"preview:portfolio": "pnpm --filter portfolio preview",
+		"test:portfolio": "pnpm --filter portfolio test",
+		"audit:all": "pnpm audit",
+		"lint": "eslint .",
+		"format": "prettier --check .",
+		"format:write": "prettier --write ."
+	},
+	"devDependencies": {
+		"@eslint/js": "9.18.0",
+		"eslint": "9.18.0",
+		"eslint-config-prettier": "10.1.8",
+		"eslint-plugin-svelte": "3.20.0",
+		"globals": "17.7.0",
+		"prettier": "3.4.2",
+		"prettier-plugin-svelte": "4.1.1",
+		"typescript-eslint": "8.20.0"
+	},
+	"packageManager": "pnpm@10.26.2+sha512.0e308ff2005fc7410366f154f625f6631ab2b16b1d2e70238444dd6ae9d630a8482d92a451144debc492416896ed16f7b114a86ec68b8404b2443869e68ffda6"
+}
