@@ -96,8 +96,8 @@ jobs:
           git rm -rf --cached node_modules packages sites scripts src .github .agents .gitignore .npmrc .prettierrc .prettierignore eslint.config.js package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.ts README.md security_audit.md .svelte-kit build 2>/dev/null || true
           rm -rf node_modules packages sites scripts src .github .agents .gitignore .npmrc .prettierrc .prettierignore eslint.config.js package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.ts README.md security_audit.md .svelte-kit build
 
-          # Copy built folders over. This preserves existing subfolders (like other previews)
-          cp -r ../temp_build/* ./
+          # Copy built folders over. This preserves existing subfolders (like other previews) and includes dotfiles
+          cp -r ../temp_build/. ./
 
           # Add and commit changes
           git add .
