@@ -96,6 +96,16 @@ jobs:
           git rm -rf --cached node_modules packages sites scripts src .github .agents .gitignore .npmrc .prettierrc .prettierignore eslint.config.js package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.ts README.md security_audit.md .svelte-kit build 2>/dev/null || true
           rm -rf node_modules packages sites scripts src .github .agents .gitignore .npmrc .prettierrc .prettierignore eslint.config.js package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.json vite.config.ts README.md security_audit.md .svelte-kit build
 
+          # Clean up the specific target folders we are deploying to prevent old chunk accumulation (dynamic for future sites)
+          for dir in $(find ../temp_build -maxdepth 1 -mindepth 1 -type d); do
+            basename_dir=$(basename "$dir")
+            if [ "$basename_dir" = "preview" ]; then
+              rm -rf "preview/${{ github.ref_name }}"
+            else
+              rm -rf "$basename_dir"
+            fi
+          done
+
           # Copy built folders over. This preserves existing subfolders (like other previews) and includes dotfiles
           cp -r ../temp_build/. ./
 
