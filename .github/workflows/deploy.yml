@@ -34,6 +34,7 @@ jobs:
       - name: Prepare build files
         run: |
           mkdir -p ../temp_build
+          touch ../temp_build/.nojekyll
 
           # Setup Git config for commit
           git config --global user.name "github-actions[bot]"
