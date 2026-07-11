@@ -3,7 +3,7 @@ class EditorState {
 	inPoint = $state<number | null>(null);
 	outPoint = $state<number | null>(null);
 	isPlaying = $state(false);
-	fps = 24; // Static timeline frame rate
+	fps = 60; // Static timeline frame rate
 
 	toggleLogMode = () => {
 		this.isLogMode = !this.isLogMode;

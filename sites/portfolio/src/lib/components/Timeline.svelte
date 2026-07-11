@@ -75,7 +75,7 @@
 	// Format percent to timecode based on active FPS config
 	function formatPercentToTimecode(pct: number): string {
 		const totalSeconds = scrollHeight / 100;
-		const fps = 24;
+		const fps = editorState.fps;
 		const totalFrames = Math.floor((pct / 100) * totalSeconds * fps);
 		const frames = totalFrames % fps;
 		const seconds = Math.floor(totalFrames / fps) % 60;
