@@ -15,15 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0 # Fetch all branches and tags
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
 
       - name: Set up Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: 24
           cache: 'pnpm'
@@ -47,8 +47,22 @@ jobs:
           # Copy to temp dir
           mkdir -p ../temp_build/portfolio
           cp -r sites/portfolio/build/* ../temp_build/portfolio/
-          # Add simple root redirect index.html pointing to /portfolio/
-          echo '<meta http-equiv="refresh" content="0; url=./portfolio/">' > ../temp_build/index.html
+          # Add smart root redirect index.html pointing to /portfolio/ handling trailing slashes & custom domains
+          cat << 'EOF' > ../temp_build/index.html
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <script>
+                var path = window.location.pathname;
+                if (!path.endsWith('/')) path += '/';
+                window.location.replace(path + 'portfolio/');
+              </script>
+            </head>
+            <body>
+              Redirecting to <a href="./portfolio/">portfolio</a>...
+            </body>
+          </html>
+          EOF
         env:
           BASE_PATH: '/${{ github.event.repository.name }}/portfolio'
 
