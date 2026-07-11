@@ -10,8 +10,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		paths: {
-			base: process.env.BASE_PATH || '',
-			relative: false
+			base: process.env.BASE_PATH || ''
 		}
 	}
 };
