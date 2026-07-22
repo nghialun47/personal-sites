@@ -19,7 +19,7 @@ export const videoConfig = {
 			id: '9GbA2tv93mg',
 			title: 'The Legal Drug Destroying Your Life!',
 			embedUrl: 'https://www.youtube.com/embed/9GbA2tv93mg',
-			views: '450K+ Views',
+			views: '550K+ Views',
 			role: 'Multicam Editing · B-Roll',
 			desc: 'Cut between A/B cams to keep the delivery dynamic, and layered in b-roll to give each point visual weight — refining the edit pass by pass during footage review.'
 		},
